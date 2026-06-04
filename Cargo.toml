@@ -127,6 +127,13 @@ ignored = ["log", "anyhow", "serde"]
 # Use stacker's psm version which may have better WASM support
 psm = { git = "https://github.com/rust-lang/stacker", branch = "master" }
 
+# gpu-allocator (pulled by wgpu-hal's dx12 backend, which Bevy hard-enables) must
+# compile against the SAME `windows` crate version as wgpu-hal (0.58). Upstream
+# allows `>=0.53,<=0.58`, and gpui's optional `scap`/`sysinfo` pins the shared
+# 0.57 in the lock, dragging gpu-allocator to 0.57 → D3D12 type mismatch. This
+# local copy pins `windows = "0.58"` so gpu-allocator gets its own 0.58 build.
+gpu-allocator = { path = "third_party/gpu-allocator-0.27.0" }
+
 # Redirect the gpui crates to the local wgpu fork (sibling ../zed checkout) so the
 # story gallery can be exercised against the in-development wgpu renderer.
 [patch."https://github.com/zed-industries/zed"]

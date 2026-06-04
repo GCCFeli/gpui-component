@@ -45,5 +45,22 @@ gpui_web.workspace = true
 [target.'cfg(target_os = "linux")'.dependencies]
 gtk = { version = "0.18" }
 
+# Only built for the `dock_bevy` example (examples compile dev-dependencies;
+# the main story gallery `cargo run` does not, so Bevy isn't pulled in there).
+[target.'cfg(not(target_family = "wasm"))'.dev-dependencies]
+wgpu = { version = "27", default-features = false }
+# Bevy's `#[derive(Component)]` emits a `bevy_ecs` path; when `bevy` is only a
+# dev-dependency its manifest detection misses it, so depend on bevy_ecs directly
+# (same 0.18.1 instance) to make the derive path resolve.
+bevy_ecs = { version = "0.18", default-features = false }
+bevy = { version = "0.18", default-features = false, features = [
+    "bevy_core_pipeline",
+    "bevy_pbr",
+    "bevy_asset",
+    "bevy_mesh",
+    "bevy_image",
+    "bevy_window",
+] }
+
 [lints]
 workspace = true
